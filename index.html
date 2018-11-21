@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #box {
+            position: relative;
+            width: 100%;
+            min-height: 500px;
+            background-color: orange;
+        }
+
+        #target {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="box">
+        <div id="target"></div>
+    </div>
+
+    <script>
+        // <div id="target1"></div>
+        var box = document.getElementById("box"),
+            // <img id="target2">
+            img = document.getElementById("target");
+
+        // base
+        var beseDistance = 0,
+            baseImageWidth = 0,
+            baseImageHeight = 0;z
+
+        // timeout id
+        var timeoutId;
+
+        // touchmove
+        box.ontouchmove = function (event) {
+            event.preventDefault();
+
+            var touches = event.changedTouches;
+
+            if (touches.length > 1) {
+                var x1 = touches[0].pageX,
+                    y1 = touches[0].pageY;
+
+                var x2 = touches[1].pageX,
+                    y2 = touches[1].pageY;
+
+                var distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+                clearTimeout(timeoutId);
+
+                if (beseDistance && baseImageWidth && baseImageHeight) {
+                    var scale = distance / beseDistance;
+                    //alert(scale)
+
+                    if (scale && scale != Infinity) {
+                        img.offsetWidth = baseImageWidth * scale;
+                        img.offsetHeight = baseImageHeight * scale;
+                    }
+
+                    timeoutId = setTimeout(function () {
+                        beseDistance = 0;
+                        baseImageWidth = 0;
+                        baseImageHeight = 0;
+                    }, 50);
+
+                } else {
+                    beseDistance = distance;
+                    //alert(beseDistance);
+                    baseImageWidth = img.offsetWidth;
+                    //alert(baseImageWidth);
+                    baseImageHeight = img.offsetHeight;
+                    //alert(baseImageHeight);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
